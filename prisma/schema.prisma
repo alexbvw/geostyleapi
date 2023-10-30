@@ -1,0 +1,225 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+model Article {
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  spot_id      String    @db.Uuid
+  url          String
+  name         String
+  title        String
+  author       String
+  content      String
+  image_url    String
+  description  String
+  published_at String
+  created_at   DateTime? @default(now())
+  updated_at   DateTime? @updatedAt
+
+  @@index([id, title, published_at])
+}
+
+model Service {
+  id                  String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  spot_id             String    @db.Uuid
+  image_url           String?
+  service_name        String
+  estimate_hours      Int
+  amount_per_hour     Int
+  service_description String
+  created_at          DateTime? @default(now())
+  updated_at          DateTime? @updatedAt
+
+  @@index([id, service_name])
+}
+
+model Product {
+  id                  String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  spot_id             String    @db.Uuid
+  product_name        String
+  product_description String?
+  product_category    String?
+  image_url           String?
+  price               Int
+  stock_count         Int
+  in_stock            Boolean
+  created_at          DateTime? @default(now())
+  updated_at          DateTime? @updatedAt
+
+  @@index([id, product_name])
+}
+
+model Payment {
+  id              String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  spot_id         String    @db.Uuid
+  customer_id     String    @db.Uuid
+  status          String?
+  total           Int
+
+   @@index([id, customer_id])
+}
+
+model Order {
+  id              String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  spot_id         String    @db.Uuid
+  customer_id     String    @db.Uuid
+  status          String?
+  payment_option  String?
+  payment_status  Boolean?
+  line_item_count Int
+  total           Int
+  booking_ids     String[]
+  created_at      DateTime? @default(now())
+  updated_at      DateTime? @updatedAt
+
+  @@index([id])
+}
+
+model OrderItem {
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  order_id   String    @db.Uuid
+  product_id String    @db.Uuid
+  quantity   Int
+  price      Int
+  created_at DateTime? @default(now())
+  updated_at DateTime? @updatedAt
+
+  @@index([id, order_id])
+}
+
+model Timeslot {
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  spot_id    String    @db.Uuid
+  day_name   String?
+  date       String?
+  start_time String?
+  end_time   String?
+  available  Boolean
+  created_at DateTime? @default(now())
+  updated_at DateTime? @updatedAt
+
+  @@index([id, day_name, date, start_time, end_time, available])
+}
+
+model Booking {
+  id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  spot_id       String    @db.Uuid
+  amount        Int
+  total_hours   Int?
+  customer_id   String    @db.Uuid
+  start_date    String
+  end_date      String
+  status        String?
+  review        String
+  time_slot_ids String[]
+  service_ids   String[]
+  stylist_ids   String[]
+  created_at    DateTime? @default(now())
+  updated_at    DateTime? @updatedAt
+
+  @@index([id, service_ids])
+}
+
+model Spot {
+  id           String                               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  radius       Int?
+  latitude     Float?
+  longitude    Float?
+  name         String
+  type         String?
+  images       String[]
+  active       Boolean
+  address      String
+  admin_id     String                               @db.Uuid
+  open_hour    String?
+  close_hour   String?
+  stylist_ids  String[]
+  customer_ids String[]
+  created_at   DateTime?                            @default(now())
+  updated_at   DateTime?                            @updatedAt
+
+  @@index([id, name, admin_id, stylist_ids])
+}
+
+model Customer {
+  id              String                               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  radius          Int?
+  latitude        Float?
+  longitude       Float?
+  name            String                               @unique(sort: Asc)
+  phone_number    String
+  pin_code        String
+  role            String
+  order_ids       String[]
+  current_address String
+  active          Boolean
+  created_at      DateTime?                            @default(now())
+  updated_at      DateTime?                            @updatedAt
+
+  @@index([id, name, phone_number])
+}
+
+model Stylist {
+  id              String                               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  radius          Int?
+  latitude        Float?
+  longitude       Float?
+  name            String
+  phone_number    String
+  pin_code        String
+  role            String
+  current_address String
+  active          Boolean
+  created_at      DateTime?                            @default(now())
+  updated_at      DateTime?                            @updatedAt
+
+  @@index([id, name, phone_number])
+}
+
+model Admin {
+  id              String                               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  radius          Int?
+  latitude        Float?
+  longitude       Float?
+  name            String
+  phone_number    String
+  pin_code        String
+  role            String
+  current_address String
+  active          Boolean
+  created_at      DateTime?                            @default(now())
+  updated_at      DateTime?                            @updatedAt
+
+  @@index([id, name, phone_number])
+}
+
+model Chatroom {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String
+  customer_id String    @db.Uuid
+  admin_id    String    @db.Uuid
+  created_at  DateTime? @default(now())
+  updated_at  DateTime? @updatedAt
+
+  @@index([id, customer_id, admin_id])
+}
+
+model Message {
+  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  customer_id    String    @db.Uuid
+  admin_id       String    @db.Uuid
+  message        String
+  message_status String
+  message_type   String
+  role           String
+  is_sender      Boolean
+  created_at     DateTime? @default(now())
+  updated_at     DateTime? @updatedAt
+
+  @@index([customer_id, admin_id])
+}

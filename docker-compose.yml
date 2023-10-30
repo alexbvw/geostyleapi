@@ -1,0 +1,38 @@
+version: '3.6'
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: "docker/nginx.dockerfile"
+    hostname: "nginx"
+    ports : 
+        - 81:81
+        - 444:444
+
+  pgDB:
+    image: postgis/postgis:13-3.1-alpine
+    restart: always
+    ports:
+      - '5432:5432'
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: andromeda321123
+      POSTGRES_DB: geostyledb
+
+  # web:
+  #   build:
+  #     context: .
+  #     dockerfile: ./docker/app.dockerfile
+  #   volumes:
+  #     - .:/geostyleapi
+  #   restart: unless-stopped
+  #   depends_on:
+  #     - pgDB
+  #   container_name: geostyleapi
+  #   environment:
+  #     - 'DB_PORT=5432'
+  #     - 'DB_HOST=geostyledb'
+
+volumes:
+  db_data:

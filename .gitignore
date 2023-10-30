@@ -1,0 +1,8 @@
+node_modules/
+prisma/migrations
+blah
+dist/
+*.env*
+!.env.example
+!migrations/
+package-lock.json
