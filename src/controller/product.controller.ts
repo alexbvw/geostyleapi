@@ -156,15 +156,14 @@ export const prisma = new PrismaClient();
       const products:any = await prisma.$queryRaw`
       SELECT 
       id::text, 
+      spot_id::text,
       product_name::text
       FROM "Product"` as any;
- 
+      
       products?.forEach((product:any) => {
           if(product.spot_id == spot_id && product?.product_name == product_name){
             match = true
-          } else {
-            match = false
-          }
+          } 
       })
 
       if(match){

@@ -16,7 +16,7 @@ npx prisma migrate dev --name init
 ```
 - Lastly run the following command to generate Prisma Client.
 ```
-npx prisma generate
+
 ```
 **_Limitation_**: Currently Prisma doesn't support custom data types, so querying for the _geography_ type in the normal Prisma models is not possible. Operations can only be performed on the types via `prisma.$queryRaw` or `prisma.$executeRaw`. You can learn more about unsupported types [here](https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#unsupported).
 ### 3. Start the REST API server
