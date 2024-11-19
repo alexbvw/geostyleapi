@@ -18,6 +18,7 @@ const timeSlotController = require('../controller/timeslot.controller');
 // <--- SPOTS ROUTES ---> //
 stylists.get('/spots', spotController.getSpots);
 stylists.get('/spot/:id', spotController.getSpot);
+stylists.post('/spots', stylistAuthentication, spotController.postSpot);
 stylists.get('/spots/radius/:id', spotController.getStylistSpots);
 stylists.get('/spot/services/:id', serviceController.getSpotServices);
 stylists.get('/spot/products/:id', productController.getSpotProducts);

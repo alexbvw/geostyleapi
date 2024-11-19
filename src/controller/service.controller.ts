@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { createClient } from '@supabase/supabase-js';
 
 export const prisma = new PrismaClient();
 
@@ -168,28 +169,60 @@ export const prisma = new PrismaClient();
       }
 
   }
+  const supabase = createClient('https://gotuhgkivvglmxdzvqvd.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdvdHVoZ2tpdnZnbG14ZHp2cXZkIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcyMjAxOTM0MCwiZXhwIjoyMDM3NTk1MzQwfQ.oY4yYqa0MYhg7QsNnW5F73F2is2cReWrifa9fu0Qvy4')
 
-  exports.uploadServiceImage = async (req:any, res:any) => {
-    let ImageFile;
-    let uploadPath;
+  exports.uploadServiceImage = async (req: any, res: any) => {
+    let id = req.params.id
+    console.log(id)
+    try {
+      // Ensure a file is uploaded
+      if (!req.files || !req.files.image) {
+        return res.status(400).send('No image file was uploaded.');
+      }
+      console.log(res)
+      const imageFile = req.files.image;
   
-    if (!req.files || Object.keys(req.files).length === 0) {
-      return res.status(400).send('No files were uploaded.');
+      // Create a unique filename to avoid overwriting existing files
+      const uniqueFileName = `${Date.now()}_${imageFile.name}`;
+      const { data, error } = await supabase.storage.from('manifest').upload(uniqueFileName, imageFile.data);
+      console.log(data)
+      if (error) {
+        res.status(500).json({ error: error });
+      } else {
+        
+        try {
+         let publicURL = 'https://gotuhgkivvglmxdzvqvd.supabase.co/storage/v1/object/public/'+data.fullPath
+         const response: any = await prisma.service.update({
+           where: {
+             id: id
+           },
+           data: {
+             image_url: publicURL
+           }
+         })
+    
+          return res.status(200).json({
+            success: true,
+            services: response
+          })
+    
+        } catch (e) {
+    
+          res.status(400).json({
+            error: e
+          })
+    
+        }
+        return res.status(200).json({
+          success: true,
+          file: data.fullPath
+        })
+      }
+
+    } catch (error: any) {
+      res.status(500).json({ error: error });
     }
-
-    ImageFile = req?.files?.image;
-    // console.log(ImageFile);
-    // uploadPath = __dirname + '/uploads' + sampleFile?.name;
-  
-    // // Use the mv() method to place the file somewhere on your server
-    // sampleFile?.mv(uploadPath, function(err:any) {
-    //   if (err)
-    //     return res.status(400).send(err);
-  
-    //   res.send('File uploaded!');
-    // });
-
-  }
+  };
 
   exports.updateService = async (req:any, res:any) => {
 

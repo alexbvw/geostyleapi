@@ -19,9 +19,9 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
     environment:
-    - POSTGRES_USER=neo
-    - POSTGRES_DB=geostyledb
-    - POSTGRES_PASSWORD=excal1b3r321123
+      - POSTGRES_USER=${POSTGIS_USER}
+      - POSTGRES_DB=${POSTGIS_DATABASE}
+      - POSTGRES_PASSWORD=${POSTGIS_PASSWORD}
 
   # web:
   #   build:
