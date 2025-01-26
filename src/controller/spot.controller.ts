@@ -1,8 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 
+var match = false;
 export const prisma = new PrismaClient();
-
-  var match = false;
 
   function calcCrow(lat1:any, lng1:any, lat2:any, lng2:any) 
   {

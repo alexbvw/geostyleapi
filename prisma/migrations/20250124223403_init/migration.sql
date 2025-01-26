@@ -1,5 +1,4 @@
--- create postgis extension
-CREATE EXTENSION postgis;
+-- CREATE EXTENSION postgis;
 -- CreateTable
 CREATE TABLE "Article" (
     "id" UUID NOT NULL DEFAULT gen_random_uuid(),

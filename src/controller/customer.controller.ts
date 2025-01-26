@@ -4,9 +4,8 @@ import { env } from 'process';
 import jwt from 'jsonwebtoken';
 import { PrismaClient } from '@prisma/client';
 
+var match = false;
 export const prisma = new PrismaClient();
-
-  var match = false;
 
   exports.loginCustomer = async (req:any, res:any) => {
 

@@ -79,6 +79,8 @@ stylists.get('/product/:id', productController.getProduct);
 stylists.post('/products', stylistAuthentication, productController.postProduct);
 stylists.put('/product/:id', stylistAuthentication, productController.updateProduct);
 stylists.delete('/product/:id', stylistAuthentication, productController.deleteProduct);
+stylists.post('/product-image/:id', stylistAuthentication, productController.uploadProductImage);
+stylists.delete('/product-image/:id', stylistAuthentication, productController.deleteProductImage);
 
 // <--- SERVICES ROUTES ---> //
 stylists.get('/services', serviceController.getServices);
@@ -87,6 +89,7 @@ stylists.post('/services', stylistAuthentication, serviceController.postService)
 stylists.put('/service/:id', stylistAuthentication, serviceController.updateService);
 stylists.delete('/service/:id', stylistAuthentication, serviceController.deleteService);
 stylists.post('/service-image/:id', stylistAuthentication, serviceController.uploadServiceImage);
+stylists.delete('/service-image/:id', stylistAuthentication, serviceController.deleteServiceImage);
 
 
 

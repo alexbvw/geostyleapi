@@ -1,9 +1,9 @@
 import { PrismaClient } from '@prisma/client';
 import { createClient } from '@supabase/supabase-js';
 
+var match = false;
 export const prisma = new PrismaClient();
-
-  var match = false;
+const supabase = createClient('https://gotuhgkivvglmxdzvqvd.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdvdHVoZ2tpdnZnbG14ZHp2cXZkIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcyMjAxOTM0MCwiZXhwIjoyMDM3NTk1MzQwfQ.oY4yYqa0MYhg7QsNnW5F73F2is2cReWrifa9fu0Qvy4')
 
   exports.getSpotServices = async (req:any, res:any) => {
 
@@ -169,7 +169,7 @@ export const prisma = new PrismaClient();
       }
 
   }
-  const supabase = createClient('https://gotuhgkivvglmxdzvqvd.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdvdHVoZ2tpdnZnbG14ZHp2cXZkIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcyMjAxOTM0MCwiZXhwIjoyMDM3NTk1MzQwfQ.oY4yYqa0MYhg7QsNnW5F73F2is2cReWrifa9fu0Qvy4')
+  
 
   exports.uploadServiceImage = async (req: any, res: any) => {
     let id = req.params.id
@@ -221,6 +221,19 @@ export const prisma = new PrismaClient();
 
     } catch (error: any) {
       res.status(500).json({ error: error });
+    }
+  };
+
+  exports.deleteServiceImage = async (req: any, res: any) => {
+    const { id } = req.params;
+    const { data, error } = await supabase.storage.from('manifest').remove([id]);
+    if (error) {
+      res.status(500).json({ error: error });
+    } else {
+      return res.status(200).json({
+        success: true,
+        file: data
+      });
     }
   };
 
